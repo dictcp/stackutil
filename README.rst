@@ -25,7 +25,8 @@ Available subcommands
 - ``instances`` -- list (or delete) instances that are not ``active`` or ``deleted``.
 - ``ips`` -- list (or free) ips that have allocated=0 but a non-null
   ``instance_id``.
-- ``services`` -- list (or delete) disabled services.
+- ``services`` -- list (or delete) stale services (services that have not
+  reported in ``service_down_time`` seconds).
 
 Example usage
 -------------
