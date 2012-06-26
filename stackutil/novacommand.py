@@ -18,15 +18,17 @@ class NovaCommand (Lister):
     
     def get_parser (self, *args, **kwargs):
         p = super(NovaCommand, self).get_parser(*args, **kwargs)
-        p.add_argument('--flagfile', default='/etc/nova/nova.conf',
+
+        g = p.add_argument_group('Nova options')
+        g.add_argument('--flagfile', default='/etc/nova/nova.conf',
                 help='Path to Nova configuration file.')
-        p.add_argument('--purge', action='store_const', dest='mode',
+        g.add_argument('--purge', action='store_const', dest='mode',
                 const='purge',
                 help='Delete or otherwise clear entries in the database.')
-        p.add_argument('--list', action='store_const', dest='mode',
+        g.add_argument('--list', action='store_const', dest='mode',
                 const='list',
                 help='List entries in the database (this is the default behavior')
-        p.add_argument('--all', action='store_true',
+        g.add_argument('--all', action='store_true',
                 help='Show all entries')
 
         p.set_defaults(mode='list')
