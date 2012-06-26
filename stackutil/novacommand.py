@@ -19,7 +19,14 @@ class NovaCommand (Lister):
     def get_parser (self, *args, **kwargs):
         p = super(NovaCommand, self).get_parser(*args, **kwargs)
         p.add_argument('--flagfile', default='/etc/nova/nova.conf')
-        p.add_argument('-n', '--dryrun', action='store_true')
+        p.add_argument('--purge', action='store_const', dest='mode',
+                const='purge')
+        p.add_argument('--list', action='store_const', dest='mode',
+                const='list')
+        p.add_argument('--all', action='store_true')
+
+        p.set_defaults(mode='list')
+
         return p
 
     def init_engine(self, args):

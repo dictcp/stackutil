@@ -36,10 +36,10 @@ setup(
             'stackutil = stackutil.main:main'
             ],
         'stackutil.command': [
-            'purge_volumes = stackutil.purge:PurgeVolumes',
-            'purge_ips = stackutil.purge:PurgeIPS',
-            'purge_instances = stackutil.purge:PurgeInstances',
-            'purge_services = stackutil.purge:PurgeServices',
+            'volumes = stackutil.volumes:Main',
+            'ips = stackutil.ips:Main',
+            'instances = stackutil.instances:Main',
+            'services = stackutil.services:Main',
             ],
         },
 
