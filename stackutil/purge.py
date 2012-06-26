@@ -57,7 +57,7 @@ class PurgeIPS(NovaCommand):
         else:
             res = self.engine.execute('''
                 select id,address,allocated,instance_id from fixed_ips
-                    where allocated == 0 and instance_id is not null''')
+                    where allocated=0 and instance_id is not null''')
 
         rows = res.fetchall()
         formatter = TableFormatter()
@@ -69,6 +69,6 @@ class PurgeIPS(NovaCommand):
 
         for id, address, allocated, instance_id in rows:
             res = self.engine.execute(
-                    'update fixed_ips set allocated=0 instance_id=NULL where id = %s', id)
+                    'update fixed_ips set allocated=0,instance_id=NULL where id = %s', id)
             self.log.info('cleared address %s (id %s).' % (address, id))
 
