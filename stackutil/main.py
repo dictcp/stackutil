@@ -11,7 +11,7 @@ class NovaUtil(App):
     def __init__(self):
         super(NovaUtil, self).__init__(
             description='Nova utilities for OpenStack',
-            version='0.1',
+            version='0.2',
             command_manager=CommandManager('stackutil.command'),
             )
 

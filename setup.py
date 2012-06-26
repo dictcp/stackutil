@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 PROJECT = 'stackutils'
-VERSION = '0.1'
+VERSION = '0.2'
 
 from setuptools import setup, find_packages
 
@@ -25,7 +25,7 @@ setup(
     author='Lars Kellogg-Stedman',
     author_email='lars@seas.harvard.edu',
 
-    install_requires=['distribute', 'cliff'],
+    install_requires=['distribute', 'cliff', 'sqlalchemy'],
 
     namespace_packages=[],
     packages=find_packages(),
@@ -36,7 +36,8 @@ setup(
             'stackutil = stackutil.main:main'
             ],
         'stackutil.command': [
-            'purge = stackutil.purge:Purge',
+            'purge_volumes = stackutil.purge:PurgeVolumes',
+            'purge_ips = stackutil.purge:PurgeIPS',
             ],
         },
 
