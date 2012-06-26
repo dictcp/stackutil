@@ -23,7 +23,7 @@ class Main(NovaCommand):
             res = self.engine.execute('''
                 select id,status,display_name from volumes
                     where status not in ("in-use", "available")
-                        and deleted_as is null''')
+                        and deleted_at is null''')
 
         rows = res.fetchall()
 
