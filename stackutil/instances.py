@@ -6,7 +6,7 @@ import logging
 
 from stackutil.novacommand import NovaCommand
 
-class PurgeInstances(NovaCommand):
+class Main(NovaCommand):
     '''Delete instances from the Nova database.'''
 
     def take_action(self, args):
