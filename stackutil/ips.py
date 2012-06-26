@@ -31,7 +31,7 @@ class Main(NovaCommand):
             for id, address, allocated, instance_id in rows:
                 res = self.engine.execute(
                         'update fixed_ips set allocated=0,instance_id=NULL where id = %s', id)
-                self.log('cleared address %s (id %s).' % (address, id))
+                self.log.info('cleared address %s (id %s).' % (address, id))
 
         return(['id', 'address', 'allocated', 'instance id'], rows)
 
