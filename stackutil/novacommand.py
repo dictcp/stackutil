@@ -17,7 +17,7 @@ class NovaCommand (Command):
     
     def get_parser (self, *args, **kwargs):
         p = super(NovaCommand, self).get_parser(*args, **kwargs)
-        p.add_argument('-f', '--flagfile', default='/etc/nova/nova.conf')
+        p.add_argument('--flagfile', default='/etc/nova/nova.conf')
         p.add_argument('-n', '--dryrun', action='store_true')
         return p
 
