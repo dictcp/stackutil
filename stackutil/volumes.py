@@ -7,7 +7,11 @@ import logging
 from stackutil.novacommand import NovaCommand
 
 class Main(NovaCommand):
-    '''Delete volumes from the Nova database.'''
+    '''Delete volumes from the Nova database.
+    
+    This command will list (or delete, with ``--purge``) volumes in states
+    other than ``in-use`` or ``available``.  If you pass the ``--all`` flag
+    it will operate on all volumes in the database.'''
 
     def take_action(self, args):
         NovaCommand.init_engine(self, args)

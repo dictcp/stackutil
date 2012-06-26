@@ -7,7 +7,11 @@ import logging
 from stackutil.novacommand import NovaCommand
 
 class Main(NovaCommand):
-    '''Delete instances from the Nova database.'''
+    '''Delete instances from the Nova database.
+    
+    This command will list (or delete, with ``--purge``) instances in the
+    Nova database in states other than ``active`` or ``deleted``.  If you
+    pass the ``--all`` flag it will operate on all instances.'''
 
     def take_action(self, args):
         NovaCommand.init_engine(self, args)
@@ -20,7 +24,7 @@ class Main(NovaCommand):
             res = self.engine.execute('''
                 select id, user_id, hostname, vm_state, task_state
                     from instances
-                    where vm_state != "active"''')
+                    where vm_state not in ("active", "deleted")''')
 
         rows = res.fetchall()
 

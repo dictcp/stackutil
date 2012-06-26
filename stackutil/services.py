@@ -7,7 +7,11 @@ import logging
 from stackutil.novacommand import NovaCommand
 
 class Main(NovaCommand):
-    '''Delete services from the Nova database.'''
+    '''Delete services from the Nova database.
+    
+    This command will list (or delete, with ``--purge``) services in the
+    Nova database that have been disabled.  With ``--all`` it will operate
+    on all services.'''
 
     def take_action(self, args):
         NovaCommand.init_engine(self, args)

@@ -7,7 +7,12 @@ import logging
 from stackutil.novacommand import NovaCommand
 
 class Main(NovaCommand):
-    '''Clear ip addresses in the Nova database.'''
+    '''Clear ip addresses in the Nova database.
+    
+    This command will list (or deallocate, with ``--purge``) fixed
+    addresses in the Nova database that are unallocated but are still
+    associated with an instance id.  With the ``--all`` flag this will
+    operate on all fixed addresses.'''
 
     def take_action(self, args):
         NovaCommand.init_engine(self, args)
