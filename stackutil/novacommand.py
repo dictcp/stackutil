@@ -3,6 +3,7 @@
 import logging
 
 from cliff.command import Command
+from cliff.lister import Lister
 
 from sqlalchemy.engine import create_engine
 
@@ -10,7 +11,7 @@ from nova import flags
 from nova import service
 from nova import utils
 
-class NovaCommand (Command):
+class NovaCommand (Lister):
     '''Base class for commands that interact with the Nova database.'''
 
     log = logging.getLogger(__name__)
@@ -21,7 +22,7 @@ class NovaCommand (Command):
         p.add_argument('-n', '--dryrun', action='store_true')
         return p
 
-    def take_action(self, args):
+    def init_engine(self, args):
         flags.FLAGS(['', '--flagfile=%s' % args.flagfile])
         self.cfg = flags.FLAGS
         self.log.debug('using sql_connection: %s' %
