@@ -19,8 +19,7 @@ class Main(NovaCommand):
 
         p.add_argument('--under')
         p.add_argument('--over')
-        p.add_argument('--unassigned', action='store_true',
-                type=bool, default=False)
+        p.add_argument('--unassigned', action='store_true', default=False)
 
         return p
 
