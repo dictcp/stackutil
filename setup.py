@@ -38,7 +38,8 @@ setup(
         'stackutil.command': [
             'volumes = stackutil.volumes:Main',
             'snapshots = stackutil.snapshots:Main',
-            'ips = stackutil.ips:Main',
+            'fixed = stackutil.fixed:Main',
+            'floating = stackutil.floating:Main',
             'instances = stackutil.instances:Main',
             'services = stackutil.services:Main',
             ],
