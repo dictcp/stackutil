@@ -21,6 +21,8 @@ class Main(NovaCommand):
         p.add_argument('--over')
         p.add_argument('--delete', '-d', type=bool, default=False)
 
+        return p
+
     def take_action(self, args):
         NovaCommand.init_engine(self, args)
 
