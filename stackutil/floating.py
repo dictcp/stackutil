@@ -19,7 +19,7 @@ class Main(NovaCommand):
 
         p.add_argument('--under')
         p.add_argument('--over')
-        p.add_argument('--delete', '-d', type=bool, default=False)
+        p.add_argument('--unassigned')
 
         return p
 
@@ -30,13 +30,17 @@ class Main(NovaCommand):
         where = []
         whereargs = []
 
-        if args.under:
-            where.append('inet_aton(address) < inet_aton(%s)')
-            whereargs.append(args.under)
+        if not args.all:
+            if args.under:
+                where.append('inet_aton(address) < inet_aton(%s)')
+                whereargs.append(args.under)
 
-        if args.over:
-            where.append('inet_aton(address) > inet_aton(%s)')
-            whereargs.append(args.over)
+            if args.over:
+                where.append('inet_aton(address) > inet_aton(%s)')
+                whereargs.append(args.over)
+
+            if args.unassigned:
+                where.append('project_id is NULL')
 
         if where:
             sql = '%s where %s' % (
@@ -46,6 +50,12 @@ class Main(NovaCommand):
 
         res = self.engine.execute(sql, whereargs)
         rows = res.fetchall()
+
+        if args.mode == 'purge':
+            for id, address, project_id, host in rows:
+                res = self.engine.execute(
+                        'delete from floating_ips where id = %s', id)
+                self.log.info('deleted address %s (id %s).' % (address, id))
 
         return(['id', 'address', 'project_id', 'host'], rows)
 
