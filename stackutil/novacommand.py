@@ -19,7 +19,7 @@ class NovaCommand (Lister):
     def get_parser (self, *args, **kwargs):
         p = super(NovaCommand, self).get_parser(*args, **kwargs)
 
-        g = p.add_argument_group('Nova options')
+        g = p.add_argument_group('Gemeral options')
         g.add_argument('--flagfile', default='/etc/nova/nova.conf',
                 help='Path to Nova configuration file.')
         g.add_argument('--purge', action='store_const', dest='mode',
@@ -30,6 +30,8 @@ class NovaCommand (Lister):
                 help='List entries in the database (this is the default behavior')
         g.add_argument('--all', action='store_true',
                 help='Show all entries')
+        g.add_argument('--id',
+                help='Operate on a particular entity.')
 
         p.set_defaults(mode='list')
 
