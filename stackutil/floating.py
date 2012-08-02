@@ -31,6 +31,10 @@ class Main(NovaCommand):
         whereargs = []
 
         if not args.all:
+            if args.id:
+                where.append('id = %s')
+                whereargs.append(args.id)
+
             if args.under:
                 where.append('inet_aton(address) < inet_aton(%s)')
                 whereargs.append(args.under)
