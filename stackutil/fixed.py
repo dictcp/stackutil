@@ -14,12 +14,25 @@ class Main(NovaCommand):
     associated with an instance id.  With the ``--all`` flag this will
     operate on all fixed addresses.'''
 
+    def get_parser (self, *args, **kwargs):
+        p = super(Main, self).get_parser(*args, **kwargs)
+
+        p.add_argument('--leftover', action='store_true')
+
+        return p
+
     def take_action(self, args):
         NovaCommand.init_engine(self, args)
 
         if args.all:
             res = self.engine.execute('''
                 select id,address,allocated,instance_id from fixed_ips''')
+        elif args.leftover:
+            res = self.engine.execute('''
+                select id,address,allocated,instance_id from fixed_ips
+                    where allocated=1 and instance_id in (
+                    select id from instances where vm_state = "deleted")
+                    ''')
         else:
             res = self.engine.execute('''
                 select id,address,allocated,instance_id from fixed_ips
