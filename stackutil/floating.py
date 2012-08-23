@@ -58,8 +58,9 @@ class Main(NovaCommand):
         if args.mode == 'purge':
             for id, address, project_id, host in rows:
                 res = self.engine.execute(
-                        'delete from floating_ips where id = %s', id)
-                self.log.info('deleted address %s (id %s).' % (address, id))
+                        '''update floating_ips set project_id=null,
+                        host=null, auto_assigned=0 where id = %s''', id)
+                self.log.info('purged address %s (id %s).' % (address, id))
 
         return(['id', 'address', 'project_id', 'host'], rows)
 
