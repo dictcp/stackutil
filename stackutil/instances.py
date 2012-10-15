@@ -53,7 +53,7 @@ class Main(NovaCommand):
         elif args.mode == 'reset':
             for id, hexid, user_id, hostname, host, vm_state, task_state in rows:
                 res = self.engine.execute(
-                        'update instances set vm_state="ACTIVE", task_state=NULL where id = %s', id)
+                        'update instances set vm_state="active", task_state=NULL where id = %s', id)
                 self.log.info('reset instance %s (id %s).' % (
                     hostname, id))
         else:
