@@ -13,6 +13,15 @@ class Main(NovaCommand):
     Nova database in states other than ``active`` or ``deleted``.  If you
     pass the ``--all`` flag it will operate on all instances.'''
 
+    def get_parser (self, *args, **kwargs):
+        p = super(Main, self).get_parser(*args, **kwargs)
+
+        p.add_argument('--deleting', action='store_true')
+        p.add_argument('--reset', action='store_const',
+                constant='reset', dest='mode')
+
+        return p
+
     def take_action(self, args):
         NovaCommand.init_engine(self, args)
 
@@ -20,6 +29,11 @@ class Main(NovaCommand):
             res = self.engine.execute('''
                 select id, hex(id), user_id, hostname, host, vm_state, task_state
                     from instances''')
+        elif args.deleting:
+            res = self.engine.execute('''
+                select id, hex(id), user_id, hostname, host, vm_state, task_state
+                    from instances
+                    where task_state = "deleting"''')
         else:
             res = self.engine.execute('''
                 select id, hex(id), user_id, hostname, host, vm_state, task_state
@@ -36,9 +50,15 @@ class Main(NovaCommand):
                         'delete from instances where id = %s', id)
                 self.log.info('deleted instance %s (id %s).' % (
                     hostname, id))
-
-        return([
-            'id', 'user_id', 'hostname', 'host',
-            'vm state', 'task state',
-            ], (r[1:] for r in rows))
+        elif args.mode == 'reset':
+            for id, hexid, user_id, hostname, host, vm_state, task_state in rows:
+                res = self.engine.execute(
+                        'update instances set vm_state="ACTIVE", task_state=NULL where id = %s', id)
+                self.log.info('reset instance %s (id %s).' % (
+                    hostname, id))
+        else:
+            return([
+                'id', 'user_id', 'hostname', 'host',
+                'vm state', 'task state',
+                ], (r[1:] for r in rows))
 
