@@ -18,7 +18,7 @@ class Main(NovaCommand):
 
         p.add_argument('--deleting', action='store_true')
         p.add_argument('--reset', action='store_const',
-                constant='reset', dest='mode')
+                const='reset', dest='mode')
 
         return p
 
