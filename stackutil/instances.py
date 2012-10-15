@@ -18,18 +18,18 @@ class Main(NovaCommand):
 
         if args.all:
             res = self.engine.execute('''
-                select id, user_id, hostname, vm_state, task_state
+                select id, hex(id), user_id, hostname, host, vm_state, task_state
                     from instances''')
         else:
             res = self.engine.execute('''
-                select id, user_id, hostname, vm_state, task_state
+                select id, hex(id), user_id, hostname, host, vm_state, task_state
                     from instances
                     where vm_state not in ("active", "deleted")''')
 
         rows = res.fetchall()
 
         if args.mode == 'purge':
-            for id, user_id, hostname, vm_state, task_state in rows:
+            for id, hexid, user_id, hostname, host, vm_state, task_state in rows:
                 res = self.engine.execute(
                         'delete from instance_info_caches where id = %s', id)
                 res = self.engine.execute(
@@ -38,7 +38,7 @@ class Main(NovaCommand):
                     hostname, id))
 
         return([
-            'id', 'user_id', 'hostname',
+            'id', 'user_id', 'hostname', 'host',
             'vm state', 'task state',
-            ], rows)
+            ], (r[1:] for r in rows))
 
