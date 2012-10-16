@@ -41,11 +41,11 @@ class Main(NovaCommand):
         elif args.state == 'stuck':
             where_sql.append('vm_state not in ("active", "deleted")')
         elif args.state == 'build':
-            where_sql.append('vm_state = "build"')
+            where_sql.append('vm_state = "building"')
         
         if args.id:
             where_sql.append('id = %s')
-            where_args.append(args.id)
+            where_args.append(int(args.id))
 
         if args.uuid:
             where_sql.append('uuid = %s')
