@@ -18,7 +18,7 @@ class Main(NovaCommand):
 
         p.add_argument('--deleting', action='store_const',
                 const='deleting', dest='state')
-        p.add_argument('--building', action='store_const',
+        p.add_argument('--building', '--build', action='store_const',
                 const='build', dest='state')
         p.add_argument('--stuck', action='store_const',
                 const='stuck', dest='state')
@@ -37,7 +37,7 @@ class Main(NovaCommand):
             where_sql = 'task_state="deleting"'
         elif args.state == 'stuck':
             where_sql = 'vm_state not in ("active", "deleted")'
-        elif args.state == 'building':
+        elif args.state == 'build':
             where_sql = 'vm_state = "build"'
         else:
             where_sql = None
