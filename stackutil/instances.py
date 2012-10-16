@@ -39,8 +39,13 @@ class Main(NovaCommand):
             where_sql = 'vm_state not in ("active", "deleted")'
         elif args.state == 'building':
             where_sql = 'vm_state = "build"'
+        else:
+            where_sql = None
 
-        res = self.engine.execute(' where '.join([sql, where_sql]))
+        if where_sql:
+            sql = 'sql where %s' % where_sql
+
+        res = self.engine.execute(sql)
         rows = res.fetchall()
 
         if args.mode == 'purge':
