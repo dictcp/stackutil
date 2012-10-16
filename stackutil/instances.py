@@ -45,7 +45,7 @@ class Main(NovaCommand):
         
         if args.id:
             where_sql.append('id = %s')
-            where_args.append(int(args.id), base=0)
+            where_args.append(int(args.id, base=0))
 
         if args.uuid:
             where_sql.append('uuid = %s')
