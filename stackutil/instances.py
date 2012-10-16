@@ -27,38 +27,38 @@ class Main(NovaCommand):
 
         if args.all:
             res = self.engine.execute('''
-                select id, hex(id), user_id, hostname, host, vm_state, task_state
+                select id, hex(id), uuid, user_id, hostname, host, vm_state, task_state
                     from instances''')
         elif args.deleting:
             res = self.engine.execute('''
-                select id, hex(id), user_id, hostname, host, vm_state, task_state
+                select id, hex(id), uuid, user_id, hostname, host, vm_state, task_state
                     from instances
                     where task_state = "deleting"''')
         else:
             res = self.engine.execute('''
-                select id, hex(id), user_id, hostname, host, vm_state, task_state
+                select id, hex(id), uuid, user_id, hostname, host, vm_state, task_state
                     from instances
                     where vm_state not in ("active", "deleted")''')
 
         rows = res.fetchall()
 
         if args.mode == 'purge':
-            for id, hexid, user_id, hostname, host, vm_state, task_state in rows:
+            for id, hexid, uuid, user_id, hostname, host, vm_state, task_state in rows:
                 res = self.engine.execute(
-                        'delete from instance_info_caches where id = %s', id)
+                        'delete from instance_info_caches where instance_id = %s', uuid)
                 res = self.engine.execute(
                         'delete from instances where id = %s', id)
                 self.log.info('deleted instance %s (id %s).' % (
                     hostname, id))
         elif args.mode == 'reset':
-            for id, hexid, user_id, hostname, host, vm_state, task_state in rows:
+            for id, hexid, uuid, user_id, hostname, host, vm_state, task_state in rows:
                 res = self.engine.execute(
                         'update instances set vm_state="active", task_state=NULL where id = %s', id)
                 self.log.info('reset instance %s (id %s).' % (
                     hostname, id))
         else:
             return([
-                'id', 'user_id', 'hostname', 'host',
+                'id', 'uuid', 'user_id', 'hostname', 'host',
                 'vm state', 'task state',
                 ], (r[1:] for r in rows))
 
