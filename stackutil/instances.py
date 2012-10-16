@@ -16,7 +16,12 @@ class Main(NovaCommand):
     def get_parser (self, *args, **kwargs):
         p = super(Main, self).get_parser(*args, **kwargs)
 
-        p.add_argument('--deleting', action='store_true')
+        p.add_argument('--deleting', action='store_const',
+                const='deleting', dest='state')
+        p.add_argument('--building', action='store_const',
+                const='build', dest='state')
+        p.add_argument('--stuck', action='store_const',
+                const='stuck', dest='state')
         p.add_argument('--reset', action='store_const',
                 const='reset', dest='mode')
 
@@ -25,21 +30,17 @@ class Main(NovaCommand):
     def take_action(self, args):
         NovaCommand.init_engine(self, args)
 
-        if args.all:
-            res = self.engine.execute('''
-                select id, hex(id), uuid, user_id, hostname, host, vm_state, task_state
-                    from instances''')
-        elif args.deleting:
-            res = self.engine.execute('''
-                select id, hex(id), uuid, user_id, hostname, host, vm_state, task_state
-                    from instances
-                    where task_state = "deleting"''')
-        else:
-            res = self.engine.execute('''
-                select id, hex(id), uuid, user_id, hostname, host, vm_state, task_state
-                    from instances
-                    where vm_state not in ("active", "deleted")''')
+        sql = '''select id, hex(id), uuid, user_id, hostname, host, vm_state, task_state
+                    from instances'''
 
+        if args.state == 'deleting':
+            where_sql = 'task_state="deleting"'
+        elif args.state == 'stuck':
+            where_sql = 'vm_state not in ("active", "deleted")'
+        elif args.state == 'building':
+            where_sql = 'vm_state = "build"'
+
+        res = self.engine.execute(' where '.join([sql, where_sql]))
         rows = res.fetchall()
 
         if args.mode == 'purge':
