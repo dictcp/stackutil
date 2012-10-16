@@ -22,7 +22,6 @@ class Main(NovaCommand):
                 const='build', dest='state')
         p.add_argument('--stuck', action='store_const',
                 const='stuck', dest='state')
-        p.add_argument('--id')
         p.add_argument('--uuid')
         p.add_argument('--reset', action='store_const',
                 const='reset', dest='mode')
