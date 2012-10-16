@@ -22,6 +22,8 @@ class Main(NovaCommand):
                 const='build', dest='state')
         p.add_argument('--stuck', action='store_const',
                 const='stuck', dest='state')
+        p.add_argument('--id')
+        p.add_argument('--uuid')
         p.add_argument('--reset', action='store_const',
                 const='reset', dest='mode')
 
@@ -32,20 +34,28 @@ class Main(NovaCommand):
 
         sql = '''select id, hex(id), uuid, user_id, hostname, host, vm_state, task_state
                     from instances'''
+        where_sql = []
+        where_args = []
 
         if args.state == 'deleting':
-            where_sql = 'task_state="deleting"'
+            where_sql.append('task_state="deleting"')
         elif args.state == 'stuck':
-            where_sql = 'vm_state not in ("active", "deleted")'
+            where_sql.append('vm_state not in ("active", "deleted")')
         elif args.state == 'build':
-            where_sql = 'vm_state = "build"'
-        else:
-            where_sql = None
+            where_sql.append('vm_state = "build"')
+        
+        if args.id:
+            where_sql.append('id = %s')
+            where_args.append(args.id)
+
+        if args.uuid:
+            where_sql.append('uuid = %s')
+            where_args.append(args.uuid)
 
         if where_sql:
-            sql = 'sql where %s' % where_sql
+            sql = '%s where %s' % (sql, ' and '.join(where_sql))
 
-        res = self.engine.execute(sql)
+        res = self.engine.execute(sql, where_args)
         rows = res.fetchall()
 
         if args.mode == 'purge':
