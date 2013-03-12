@@ -64,6 +64,8 @@ class Main(NovaCommand):
         if args.mode == 'purge':
             for id, hexid, uuid, user_id, hostname, host, vm_state, task_state in rows:
                 res = self.engine.execute(
+                        'delete a from nova.security_group_instance_association as a inner join nova.instances as b on a.instance_id=b.id where b.uuid= %s', uuid)
+                res = self.engine.execute(
                         'delete from instance_info_caches where instance_id = %s', uuid)
                 res = self.engine.execute(
                         'delete from instances where id = %s', id)
